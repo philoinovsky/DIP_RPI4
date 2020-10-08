@@ -6,6 +6,11 @@ from imutils.video import VideoStream
 from time import sleep
 from lib.color import *
 from lib.progress import *
+import base64
+import cv2
+
+# Global Config
+FPS = 2
 
 # Set up MQTT client
 client = mqtt.Client()
@@ -35,5 +40,9 @@ newwidth = 600
 newheight = 400
 while True:
     frame = imutils.resize(vs.read(), width=newwidth, height=newheight)
-    client.publish("camera",frame)
-    sleep(0.5)
+    # print(frame)
+    retval, buffer = cv2.imencode('.jpg', frame)
+    jpg_as_text = base64.b64encode(buffer)
+    # print(jpg_as_text)
+    client.publish("camera",jpg_as_text)
+    sleep(1/FPS)
