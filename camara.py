@@ -8,9 +8,12 @@ from lib.color import *
 from lib.progress import *
 import base64
 import cv2
+import sys
 
 # Global Config
 FPS = 2
+newwidth = 600
+newheight = 400
 
 # Set up MQTT client
 client = mqtt.Client()
@@ -36,9 +39,11 @@ sleep(1)
 
 # Capture frames
 console("info","Capturing frames")
-newwidth = 600
-newheight = 400
+cnt = 0
 while True:
+    sys.stdout.flush()
+    sys.stdout.write("\r[+] frame %d" % cnt)
+    cnt += 1
     frame = imutils.resize(vs.read(), width=newwidth, height=newheight)
     # print(frame)
     retval, buffer = cv2.imencode('.jpg', frame)
